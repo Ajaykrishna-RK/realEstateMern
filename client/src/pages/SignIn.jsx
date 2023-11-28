@@ -1,18 +1,27 @@
 import React, { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInFailure,
+  signInSuccess,
+} from "../redux/user/UserSlice";
 
 function Signin() {
+  const { loading, error } = useSelector((state) => state?.user || {})
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(signInStart());
     try {
       const res = await fetch("/api/auth/signin", {
         method: "POST",
@@ -23,23 +32,19 @@ function Signin() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false);
-        setError(data?.message);
+        dispatch(signInFailure(data?.message));
         return;
       }
-      setLoading(false);
-      setError(null);
-      navigate("/")
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (err) {
-      setLoading(false);
-      setError(err.message);
+    dispatch(signInFailure(err.message))
     }
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="my-7 text-3xl text-center font-semibold"> Sign In </h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-    
         <input
           type="email"
           placeholder="email"
@@ -57,7 +62,7 @@ function Signin() {
 
         <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-70">
           {" "}
-          {loading ? "Loading" : "Sign In"} 
+          {loading ? "Loading" : "Sign In"}
         </button>
       </form>
 
@@ -69,10 +74,9 @@ function Signin() {
         </Link>
       </div>
 
-      {error  && <p className="text-red-500"> {error} </p>}
+      {error && <p className="text-red-500"> {error} </p>}
     </div>
   );
 }
 
 export default Signin;
-

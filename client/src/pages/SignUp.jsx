@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
 
 function SignUp() {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const {loading,error}  = useSelector((state)=>state?.user || {})
+
   const navigate = useNavigate()
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
