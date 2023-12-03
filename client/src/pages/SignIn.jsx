@@ -6,6 +6,7 @@ import {
   signInFailure,
   signInSuccess,
 } from "../redux/user/UserSlice";
+import OAuth from "../components/OAuth";
 
 function Signin() {
   const { loading, error } = useSelector((state) => state?.user || {})
@@ -64,6 +65,7 @@ function Signin() {
           {" "}
           {loading ? "Loading" : "Sign In"}
         </button>
+        <OAuth/>
       </form>
 
       <div className="flex items-center gap-2 mt-5">
