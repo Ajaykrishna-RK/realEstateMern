@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
@@ -6,7 +6,7 @@ import OAuth from "../components/OAuth";
 function SignUp() {
   const [formData, setFormData] = useState({});
 
-  const {loading,error}  = useSelector((state)=>state?.user || {})
+  const {loading,setLoading,error}  = useSelector((state)=>state?.user || {})
 
   const navigate = useNavigate()
   const handleChange = (e) => {
@@ -42,6 +42,7 @@ function SignUp() {
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="my-7 text-3xl text-center font-semibold"> Sign Up </h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      
         <input
           type="text"
           placeholder="username"
